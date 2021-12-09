@@ -11,7 +11,8 @@
       - name: Check if net.iframes exist
         lineinfile:
           dest: /etc/default/grub
-          regexp: 'net\.ifnames'
+          regexp: 'net\.ifname'
+          line: ''
         check_mode: yes
         register: ifnames
       
@@ -19,6 +20,7 @@
         lineinfile:
           dest: /etc/default/grub
           regexp: 'biosdevname'
+          line: ''
         check_mode: yes
         register: biosdev
 
@@ -34,21 +36,21 @@
           path: /etc/default/grub
           regexp: 'biosdevname=1'
           replace: 'biosdevname=0'
-        when: biosdevname
+        when: biosdev
 
       - name: Add net.iframes to file if not exist
         lineinfile:
           dest: /etc/default/grub
           regexp: '(GRUB_CMDLINE_LINUX=".*)"'
           line: '\1 net.ifnames=0"'
-        when: !ifnames
+        when: not ifnames
       
       - name: Add biosdevname to file if not exist
         lineinfile:
           dest: /etc/default/grub
           regexp: '(GRUB_CMDLINE_LINUX=".*)"'
           line: '\1 biosdevname=0"'
-        when: !biosdevname
+        when: not biosdev
 
 
 
