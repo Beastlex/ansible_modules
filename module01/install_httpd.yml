@@ -1,22 +1,23 @@
 ---
 # Install apache on hosts
 
--
-    hosts: all
+-   name: Task 01 module 01
+    hosts: node1.example.com
+    user: ansible
+    become: yes
+    become_method: sudo
 
     tasks:
       - name: Install apache package
         package:
           name: httpd
           state: latest
-        become: true
       
       - name: Start apache service
         service:
           name: httpd
           state: restarted
         notify: Apache healthcheck
-        become: true
 
       - name: Place content file
         copy:
