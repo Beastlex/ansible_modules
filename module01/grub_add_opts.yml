@@ -1,0 +1,57 @@
+---
+# Remove apache from hosts
+
+-   name: Task 03 module 01
+    hosts: webservers
+    user: ansible
+    become: yes
+    become_method: sudo
+
+    tasks:
+      - name: Check if net.iframes exist
+        lineinfile:
+          dest: /etc/default/grub
+          regexp: 'net\.ifnames'
+        check_mode: yes
+        register: ifnames
+      
+      - name: Check if biosdevname exist
+        lineinfile:
+          dest: /etc/default/grub
+          regexp: 'biosdevname'
+        check_mode: yes
+        register: biosdev
+
+      - name: Replace existing net.iframes
+        replace:
+          path: /etc/default/grub
+          regexp: 'net\.ifnames=1'
+          replace: 'net.ifnames=0'
+        when: ifnames
+
+      - name: Replace existing biosdevname
+        replace:
+          path: /etc/default/grub
+          regexp: 'biosdevname=1'
+          replace: 'biosdevname=0'
+        when: biosdevname
+
+      - name: Add net.iframes to file if not exist
+        lineinfile:
+          dest: /etc/default/grub
+          regexp: '(GRUB_CMDLINE_LINUX=".*)"'
+          line: '\1 net.ifnames=0"'
+        when: !ifnames
+      
+      - name: Add biosdevname to file if not exist
+        lineinfile:
+          dest: /etc/default/grub
+          regexp: '(GRUB_CMDLINE_LINUX=".*)"'
+          line: '\1 biosdevname=0"'
+        when: !biosdevname
+
+
+
+
+
+...
