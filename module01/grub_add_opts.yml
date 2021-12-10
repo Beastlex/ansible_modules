@@ -9,43 +9,46 @@
 
     tasks:
       - name: Check if net.iframes exist
-        shell: "grep -i 'net\.ifnames' /etc/default/grub"
+        shell: "grep -i 'net.ifnames' /etc/default/grub"
         register: ifnames
+        ignore_errors: true
       
       - name: Check if biosdevname exist
         shell: "grep -i 'biosdevname' /etc/default/grub"
         register: biosdev
+        ignore_errors: true
 
       - name: Replace existing net.iframes
         replace:
           path: /etc/default/grub
           regexp: 'net\.ifnames=1'
           replace: 'net.ifnames=0'
-        when: ifnames is changed
+        when: ifnames is not failed
 
       - name: Replace existing biosdevname
         replace:
           path: /etc/default/grub
           regexp: 'biosdevname=1'
           replace: 'biosdevname=0'
-        when: biosdev is changed
+        when: biosdev is not failed
 
       - name: Add net.iframes to file if not exist
         lineinfile:
           dest: /etc/default/grub
-          regexp: '(GRUB_CMDLINE_LINUX=".*)"'
+          regexp: '^(GRUB_CMDLINE_LINUX=".*)"$'
           line: '\1 net.ifnames=0"'
-        when: not ifnames is changed
+          backrefs: yes
+        when: ifnames is failed
       
       - name: Add biosdevname to file if not exist
         lineinfile:
           dest: /etc/default/grub
-          regexp: '(GRUB_CMDLINE_LINUX=".*)"'
+          regexp: '^(GRUB_CMDLINE_LINUX=".*)"$'
           line: '\1 biosdevname=0"'
-        when: not biosdev is changed
+          backrefs: yes
+        when: biosdev is failed
 
-
-
-
+      - name: Update GRUB config
+        shell: "grub2-mkconfig"
 
 ...
