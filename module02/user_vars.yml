@@ -1,0 +1,9 @@
+---
+users:
+        - name: Alice
+          email: alice_12@gmail.com
+        - name: Bob
+          email: bob_23@gmail.com
+        - name: Carol
+          email: catol_45@gmail.com
+...

@@ -7,38 +7,16 @@
     become: yes
     become_method: sudo
 
+    vars_files:
+            - user_vars.yml
+            - password_vars.yml
+
     tasks:
-      - name: Install apache package
-        package:
-          name: httpd
-          state: latest
-      
-      - name: Start apache service
-        service:
-          name: httpd
-          state: restarted
-        notify: Apache healthcheck
-
-      - name: Place content file
-        copy:
-          content: "Welcome to my web server"
-          dest: /var/www/html/index.html
-
-      - name: Open http port firewall
-        firewalld:
-          service: http
-          permanent: true
-          state: enabled
-
-      - name: Restart firewall for apply changes
-        service:
-          name: firewalld
-          state: restarted
-
-    handlers:
-      - name: Apache healthcheck
-        uri:
-          url: http://{{ ansible_default_ipv4.address }}
-          status_code: 200
-
+      - name: Add users and passwords from files
+        user:
+          name: "{{ item.0.name|lower }}"
+          comment: "{{ item.0.email }}"
+          home: /home/{{ item.0.name|lower }}
+          password: "{{ item.1|password_hash('sha512')}}"
+        loop: "{{ users|zip(passwords)|list }}"
 ...
