@@ -1,0 +1,5 @@
+---
+# vars file for beastlex.vsftpd
+ports_for_open:
+  - 20
+  - 21

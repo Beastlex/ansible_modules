@@ -1,0 +1,10 @@
+---
+# defaults file for beastlex.vsftpd
+dir_for_anonymous: /var/ftp/pub
+
+subdirs_for_upload:
+  - upload
+
+anon_mkdir: "NO"
+
+ftpd_anon_write: yes
