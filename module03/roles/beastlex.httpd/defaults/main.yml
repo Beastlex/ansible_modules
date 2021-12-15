@@ -1,0 +1,7 @@
+---
+# defaults file for beastlex.httpd
+ports_for_open:
+  - 80
+  - 443
+
+default_file: index.html

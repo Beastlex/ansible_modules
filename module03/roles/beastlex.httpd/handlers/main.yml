@@ -1,0 +1,7 @@
+---
+# handlers file for beastlex.httpd
+
+- name: Apache helthcheck
+  uri:
+    url: http://{{ ansible_default_ipv4.address }}
+    status_code: 200

@@ -1,0 +1,29 @@
+---
+# tasks file for beastlex.httpd
+
+- name: Install apache package
+  package:
+    name: httpd
+    state: latest
+
+- name: Start apache service
+  service:
+    name: httpd
+    state: restarted
+  notify: Apache helthcheck
+
+- name: Place content file
+  copy:
+    src: "{{ default_file }}"
+    dest: /var/www/html/index.html
+
+- name: Open ports for firewall
+  firewalld:
+    port: "{{ item }}/tcp"
+    state: enabled
+    permanent: true
+
+- name: Restart firewall to apply changes
+  service:
+    name: firewalld
+    state: restarted
