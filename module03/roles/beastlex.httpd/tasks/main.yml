@@ -22,6 +22,7 @@
     port: "{{ item }}/tcp"
     state: enabled
     permanent: true
+  loop: "{{ ports_for_open }}"
 
 - name: Restart firewall to apply changes
   service:
