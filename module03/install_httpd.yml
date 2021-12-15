@@ -1,0 +1,13 @@
+---
+# Install apache on hosts
+
+-   name: Task 01 module 01
+    hosts: webservers
+    user: ansible
+    become: yes
+    become_method: sudo
+
+    roles:
+      - beastlex.httpd
+
+...
