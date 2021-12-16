@@ -1,0 +1,44 @@
+---
+# Install apache on hosts
+
+-   name: Task 01 module 04
+    hosts: all
+    user: ansible
+    become: yes
+    become_method: sudo
+
+    tasks:
+      - name: Install apache package
+        package:
+          name: httpd
+          state: latest
+      
+      - name: Start apache service
+        service:
+          name: httpd
+          state: restarted
+        notify: Apache healthcheck
+
+      - name: Place content file
+        copy:
+          content: "Welcome to my web server"
+          dest: /var/www/html/index.html
+
+      - name: Open http port firewall
+        firewalld:
+          service: http
+          permanent: true
+          state: enabled
+
+      - name: Restart firewall for apply changes
+        service:
+          name: firewalld
+          state: restarted
+
+    handlers:
+      - name: Apache healthcheck
+        uri:
+          url: http://{{ ansible_default_ipv4.address }}
+          status_code: 200
+
+...
