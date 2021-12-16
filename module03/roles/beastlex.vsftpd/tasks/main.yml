@@ -19,13 +19,15 @@
     path: "{{ dir_for_anonymous }}"
     state: directory
     owner: root
-    group: root
+    group: ftp
     mode: 0750
 
 - name: Create subdirs for upload
   file:
     path: "{{ dir_for_anonymous}}/{{ item }}"
     state: directory
+    owner: root
+    group: ftp
     mode: 0730
   loop: "{{ subdirs_for_upload }}"
   notify: Restart vsftpd service
