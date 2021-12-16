@@ -52,7 +52,7 @@
   loop: "{{ subdirs_for_upload }}"
 
 - name: Apply SELinux context
-  command: restorecon -vR "{{ dir_for_anonymous}}/{{ item }}"
+  command: restorecon -irv {{ dir_for_anonymous}}/{{ item }}
   loop: "{{ subdirs_for_upload }}"
 
 - name: Set SELinux boolean
