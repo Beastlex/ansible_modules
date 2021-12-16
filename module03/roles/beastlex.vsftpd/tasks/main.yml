@@ -20,7 +20,7 @@
     state: directory
     owner: root
     group: ftp
-    mode: 0750
+    mode: 0755
 
 - name: Create subdirs for upload
   file:
@@ -28,7 +28,7 @@
     state: directory
     owner: root
     group: ftp
-    mode: 0730
+    mode: 0777
   loop: "{{ subdirs_for_upload }}"
   notify: Restart vsftpd service
 
