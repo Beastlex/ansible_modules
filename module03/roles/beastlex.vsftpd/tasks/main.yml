@@ -44,6 +44,17 @@
     name: firewalld
     state: restarted
 
+- name: Allow modify files in upload dirs
+  sefcontext:
+    target: "{{ dir_for_anonymous}}/{{ item }}(/.*)?"
+    setype: public_content_rw_t
+    state: present
+  loop: "{{ subdirs_for_upload }}"
+
+- name: Apply SELinux context
+  command: restorecon -irv {{ dir_for_anonymous}}/{{ item }}
+  loop: "{{ subdirs_for_upload }}"
+
 - name: Set SELinux boolean
   seboolean:
     name: ftpd_anon_write
